@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="dark_button">#000033</color>
+    <color name="dark_text">#333333</color>
+    <color name="gray_text">#666666</color>
+    <color name="light_gray_bg">#F0F0F0</color>
+    <color name="gray_icon">#AAAAAA</color>
+    <color name="black_background">#121212</color>
+    <color name="light_gray_placeholder">#3C3C3C</color>
+    <color name="dark_background">#121212</color>
+    <color name="pitch_green">#4CAF50</color>
+    <color name="red_button">#D32F2F</color>
+</resources>
