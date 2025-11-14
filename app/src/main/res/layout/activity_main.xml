@@ -6,91 +6,173 @@
     android:layout_height="match_parent"
     android:background="#121212" tools:context=".MainActivity">
 
-    <LinearLayout
-        android:id="@+id/header_layout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tìm kiếm cầu thủ"
-            android:textColor="@android:color/white"
-            android:textSize="22sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Khám phá và thêm cầu thủ vào đội hình của bạn"
-            android:textColor="#B0B0B0"
-            android:textSize="14sp"
-            android:layout_marginTop="4dp"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/search_layout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:layout_marginTop="8dp"
-        android:gravity="center_vertical"
-        android:background="@drawable/search_background"
-        app:layout_constraintTop_toBottomOf="@id/header_layout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <EditText
-            android:id="@+id/search_edit_text"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:hint="Tìm kiếm cầu thủ..."
-            android:textColorHint="#999999"
-            android:textColor="@android:color/white"
-            android:drawableStart="@drawable/ic_search"
-            android:drawablePadding="8dp"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:inputType="textPersonName" />
-
-        <ImageButton
-            android:id="@+id/filter_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-                android:src="@drawable/ic_filter"
-            android:background="@drawable/filter_button_background"
-            android:contentDescription="Lọc" />
-    </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/player_recycler_view"
-        android:layout_width="0dp"
+    <ScrollView
+        android:id="@+id/main_content_scroll"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:clipToPadding="false"
-        android:paddingBottom="8dp"
-        app:layout_constraintTop_toBottomOf="@id/search_layout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation_layout"
-        tools:listitem="@layout/item_player" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation_layout">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="16dp">
+
+            <LinearLayout
+                android:id="@+id/header_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tìm kiếm"
+                    android:textColor="@android:color/white"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/filter_buttons_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:weightSum="2"
+                app:layout_constraintTop_toBottomOf="@id/header_layout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <Button
+                    android:id="@+id/btn_filter_player"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Theo Tên Cầu thủ"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/button_active_background"
+                    android:drawableStart="@drawable/ic_player_inactive"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="12dp"
+                    android:layout_marginEnd="8dp"
+                    android:textAllCaps="false"
+                    android:stateListAnimator="@null"
+                    android:gravity="center"/>
+
+                <Button
+                    android:id="@+id/btn_filter_team"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Theo Tên Đội bóng"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/button_inactive_background"
+                    android:drawableStart="@drawable/ic_users_inactive"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="12dp"
+                    android:layout_marginStart="8dp"
+                    android:textAllCaps="false"
+                    android:stateListAnimator="@null"
+                    android:gravity="center"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/search_bar_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:gravity="center_vertical"
+                app:layout_constraintTop_toBottomOf="@id/filter_buttons_layout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <EditText
+                    android:id="@+id/search_edit_text"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/search_input_background"
+                    android:hint="Nhập tên cầu thủ..."
+                    android:textColorHint="#707070"
+                    android:textColor="@android:color/white"
+                    android:drawableStart="@drawable/ic_search"
+                    android:drawableTint="#707070"
+                    android:drawablePadding="10dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:inputType="textPersonName"
+                    android:imeOptions="actionSearch"
+                    android:maxLines="1"
+                    android:layout_marginEnd="8dp"/>
+
+                <Button
+                    android:id="@+id/btn_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:text="Tìm kiếm"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/button_active_background"
+                    android:paddingHorizontal="16dp"
+                    android:textAllCaps="false"
+                    android:stateListAnimator="@null"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/empty_state_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginTop="80dp"
+                app:layout_constraintTop_toBottomOf="@id/search_bar_layout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <ImageView
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:src="@drawable/ic_search_large"
+                    android:contentDescription="Search Icon"
+                    android:layout_marginBottom="16dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nhập từ khóa và nhấn Tìm kiếm"
+                    android:textColor="#707070"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/results_recycler_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginTop="16dp"
+                tools:itemCount="3"
+                tools:listitem="@layout/item_player_result"
+                app:layout_constraintTop_toBottomOf="@id/search_bar_layout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
     <LinearLayout
         android:id="@+id/bottom_navigation_layout"
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:orientation="horizontal"
-        android:background="#1C1C1C" android:gravity="center"
+        android:background="#1C1C1C"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
