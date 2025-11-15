@@ -47,8 +47,35 @@
             android:textStyle="bold"
             android:textColor="@android:color/white"
             tools:text="Kylian Mbappé"
-            android:layout_marginBottom="24dp" />
+            android:layout_marginBottom="12dp" />
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="24dp">
+
+            <ImageView
+                android:id="@+id/iv_team_logo_dialog"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:scaleType="fitCenter"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/rounded_background_for_logo"
+                android:contentDescription="Logo đội bóng"
+                tools:src="@drawable/ic_team_logo_example" />
+
+            <ImageView
+                android:id="@+id/iv_nationality_flag_dialog"
+                android:layout_width="28dp"
+                android:layout_height="21dp"
+                android:scaleType="centerCrop"
+                android:contentDescription="Cờ quốc tịch"
+                tools:src="@drawable/ic_flag_example" />
+
+        </LinearLayout>
         <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
