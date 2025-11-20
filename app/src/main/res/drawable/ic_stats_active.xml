@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Màu biểu tượng: Xanh lá cây hoặc màu bạn muốn làm active -->
+    <path
+        android:fillColor="#3DDC84"
+        android:pathData="M22,21L2,21L2,3L4,3L4,19L22,19L22,21ZM13,17L10,17L10,9L13,9L13,17ZM17,17L14,17L14,5L17,5L17,17ZM9,17L6,17L6,13L9,13L9,17Z" />
+</vector>
