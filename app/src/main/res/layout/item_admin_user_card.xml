@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    app:cardBackgroundColor="#212121"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trần Lê Quốc Dũng (ID: 123)"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_user_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="tranlequocdung0@gmail.com"
+                android:textColor="#999999"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_block_user"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+            android:text="Chặn"
+            android:textColor="@android:color/white"
+            android:backgroundTint="#FF9800"
+            android:paddingHorizontal="12dp"
+            android:textSize="12sp"
+            android:textAllCaps="false"/>
+
+        <Button
+            android:id="@+id/btn_delete_user"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="Xóa"
+            android:textColor="@android:color/white"
+            android:backgroundTint="#FF4444"
+            android:paddingHorizontal="12dp"
+            android:textSize="12sp"
+            android:textAllCaps="false"/>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
