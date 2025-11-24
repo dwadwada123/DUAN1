@@ -5,8 +5,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ic_football_picth"
-    tools:context=".SplashActivity">
+    android:background="@color/black"
+    tools:context=".activities.SplashActivity">
+
+    <ImageView
+        android:id="@+id/bg_splash"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.6"
+        android:contentDescription="@string/football_pitch_background"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_football_pitch" />
 
     <LinearLayout
         android:id="@+id/logo_container"
@@ -14,32 +23,40 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
-        app:layout_constraintVertical_bias="0.4"
+        app:layout_constraintVertical_bias="0.45"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
-            android:id="@+id/logo_icon"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginBottom="12dp"
-            android:contentDescription="Logo My Dream Team" />
+            android:id="@+id/iv_logo_splash"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/shape_circle_dark"
+            android:contentDescription="@string/trophy_icon"
+            android:padding="20dp"
+            android:src="@drawable/ic_trophy"
+            app:tint="@color/white" />
+
         <TextView
+            android:id="@+id/tv_app_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="My Dream Team"
-            android:textSize="24sp"
+            android:layout_marginBottom="8dp"
+            android:letterSpacing="0.05"
             android:textStyle="bold"
             android:textColor="@android:color/white"
-            android:layout_marginBottom="4dp" />
+            android:text="MY DREAM TEAM"
+            android:textSize="28sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Build Your Ultimate Squad"
             android:textSize="16sp"
+            android:alpha="0.9"
             android:textColor="@android:color/white" />
 
     </LinearLayout>
@@ -52,21 +69,22 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="40dp">
+        android:layout_marginBottom="50dp">
 
         <ProgressBar
-            android:id="@+id/loading_spinner"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:id="@+id/pb_loading"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:indeterminateTint="@android:color/white"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="10dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Checking status..."
             android:textColor="@android:color/white"
-            android:textSize="14sp" />
+            android:alpha="0.8"
+            android:textSize="12sp" />
 
     </LinearLayout>
 

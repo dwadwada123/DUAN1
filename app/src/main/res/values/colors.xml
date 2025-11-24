@@ -2,6 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
     <color name="dark_button">#000033</color>
     <color name="dark_text">#333333</color>
     <color name="light_gray_bg">#F0F0F0</color>
@@ -14,4 +15,8 @@
     <color name="gray_text">#A0A0A0</color>
     <color name="input_background_color">#2C2C2C</color>
     <color name="divider_color">#424242</color>
+
+    <color name="card_bg_purple_light">#F3E5F5</color>
+
+    <color name="input_bg_white">#FFFFFF</color>
 </resources>

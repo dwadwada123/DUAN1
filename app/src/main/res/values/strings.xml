@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">FootballPlayerManagement</string>
     <string name="title_login">Login</string>
-    <string name="title_register_account">Register Account</string>
+    <string name="title_register_account">Create Account</string>
     <string name="trophy_icon">Trophy icon in a circle, representing the management portal</string>
     <string name="football_pitch_background">Football pitch and goal net background image</string>
     <string name="username_icon">User icon</string>

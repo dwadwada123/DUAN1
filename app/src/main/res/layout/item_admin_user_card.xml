@@ -1,65 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginHorizontal="16dp"
     app:cardBackgroundColor="#212121"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="2dp">
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="12dp"
+        android:padding="16dp"
         android:gravity="center_vertical">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginEnd="8dp">
 
             <TextView
                 android:id="@+id/tv_user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Trần Lê Quốc Dũng (ID: 123)"
                 android:textColor="@android:color/white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="Trần Lê Quốc Dũng"/>
 
             <TextView
                 android:id="@+id/tv_user_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="tranlequocdung0@gmail.com"
                 android:textColor="#999999"
-                android:textSize="14sp" />
+                android:textSize="13sp"
+                android:layout_marginTop="4dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="email@example.com"/>
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_block_user"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginEnd="8dp"
-            android:text="Chặn"
-            android:textColor="@android:color/white"
-            android:backgroundTint="#FF9800"
-            android:paddingHorizontal="12dp"
-            android:textSize="12sp"
-            android:textAllCaps="false"/>
-
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_delete_user"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:text="Xóa"
             android:textColor="@android:color/white"
             android:backgroundTint="#FF4444"
-            android:paddingHorizontal="12dp"
             android:textSize="12sp"
-            android:textAllCaps="false"/>
+            app:cornerRadius="20dp"
+            android:textAllCaps="false"
+            android:paddingHorizontal="20dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"/>
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>
