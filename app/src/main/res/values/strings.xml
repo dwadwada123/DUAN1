@@ -1,10 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">FootballPlayerManagement</string>
+    <string name="title_login">Login</string>
+    <string name="title_register_account">Register Account</string>
+    <string name="trophy_icon">Trophy icon in a circle, representing the management portal</string>
+    <string name="football_pitch_background">Football pitch and goal net background image</string>
+    <string name="username_icon">User icon</string>
+    <string name="password_icon">Lock icon</string>
+    <string name="content_description_pitch">2D football pitch background image</string>
+    <string name="content_description_player_avatar">Player avatar image</string>
+    <string name="content_description_select_formation">Formation selection button</string>
 
-    <string name="trophy_icon">Biểu tượng chiếc cúp trong vòng tròn, đại diện cho cổng quản lý</string>
-    <string name="football_pitch_background">Hình nền sân bóng đá và lưới gôn</string>
-    <string name="username_icon">Biểu tượng người dùng</string>
-    <string name="password_icon">Biểu tượng ổ khóa</string>
 
     <string name="title_main">Football Player Management</string>
     <string name="title_subtitle">Sign in to manage your team roster and player data</string>
@@ -16,19 +22,16 @@
     <string name="button_sign_in">Sign In</string>
     <string name="text_no_account">Don\'t have an account?</string>
     <string name="link_register">Register here</string>
-    <string name="hint_confirm_password">Nhập lại Mật khẩu</string>
-    <string name="label_confirm_password">Xác nhận Mật khẩu</string>
-    <string name="hint_email">Nhập Email của bạn</string>
-    <string name="button_register">Đăng ký</string>
-    <string name="text_have_account">Đã có tài khoản?</string>
-    <string name="link_login_now">Đăng nhập ngay!</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="save">Lưu</string>
-    <string name="logout">Đăng xuất</string>
-    <string name="create_new_formation">Tạo đội hình mới</string>
-    <string name="content_description_pitch">Ảnh nền sân bóng 2D</string>
-    <string name="content_description_player_avatar">Ảnh đại diện cầu thủ</string>
-    <string name="content_description_select_formation">Nút chọn sơ đồ chiến thuật</string>
+    <string name="hint_confirm_password">Re-enter Password</string>
+    <string name="label_confirm_password">Confirm Password</string>
+    <string name="hint_email">Enter your email</string>
+    <string name="button_register">Register</string>
+    <string name="text_have_account">Already have an account?</string>
+    <string name="link_login_now">Sign In Now!</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="save">Save</string>
+    <string name="logout">Log Out</string>
+    <string name="create_new_formation">Create New Formation</string>
 </resources>
