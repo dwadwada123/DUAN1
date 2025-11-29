@@ -9,11 +9,13 @@
     app:cardCornerRadius="8dp"
     app:cardElevation="4dp"
     app:cardBackgroundColor="#242424">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
         android:background="?attr/selectableItemBackground">
+
         <ImageView
             android:id="@+id/iv_formation_icon"
             android:layout_width="32dp"
@@ -32,39 +34,53 @@
             android:textStyle="bold"
             android:textColor="@android:color/white"
             android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
             android:maxLines="1"
             android:ellipsize="end"
             app:layout_constraintStart_toEndOf="@id/iv_formation_icon"
-            app:layout_constraintEnd_toStartOf="@id/tv_formation_schema"
+            app:layout_constraintEnd_toStartOf="@id/btn_delete_squad"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Tiki Taka Dream Team (Đội chính)" />
+            tools:text="Tiki Taka Dream Team" />
 
         <TextView
             android:id="@+id/tv_formation_schema"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="4dp"
             android:textStyle="bold"
             android:textSize="12sp"
-            android:textColor="@android:color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:textColor="@color/pitch_green"
+            app:layout_constraintStart_toStartOf="@id/tv_formation_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_formation_name"
+            android:layout_marginTop="4dp"
             tools:text="4-3-3" />
 
         <TextView
             android:id="@+id/tv_summary_info"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textColor="@color/gray_text"
-            android:layout_marginTop="4dp"
+            android:layout_marginStart="8dp"
             android:maxLines="1"
             android:ellipsize="end"
-            app:layout_constraintStart_toStartOf="@id/tv_formation_name"
-            app:layout_constraintEnd_toEndOf="@id/tv_formation_name"
-            app:layout_constraintTop_toBottomOf="@id/tv_formation_name"
-            tools:text="10/11 cầu thủ đã điền. ST đang trống." />
+            app:layout_constraintStart_toEndOf="@id/tv_formation_schema"
+            app:layout_constraintEnd_toStartOf="@id/btn_delete_squad"
+            app:layout_constraintBottom_toBottomOf="@id/tv_formation_schema"
+            app:layout_constraintTop_toTopOf="@id/tv_formation_schema"
+            tools:text="| 10/11 cầu thủ" />
+
+        <ImageButton
+            android:id="@+id/btn_delete_squad"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_close"
+            android:padding="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:contentDescription="Xóa đội hình"
+            app:tint="#FF4444" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

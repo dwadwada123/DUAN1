@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Màu nền: Đen (#000000) với độ mờ (Alpha) là 0xB3 (khoảng 70% trong suốt) -->
-    <solid android:color="#B3000000"/>
-
-    <!-- Bo tròn góc 10dp -->
-    <corners android:radius="10dp"/>
-</shape>
