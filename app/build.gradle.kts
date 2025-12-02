@@ -1,7 +1,8 @@
 plugins {
-    alias(libs.plugins.android.application)
-}
 
+    id("com.android.application")
+    id("com.google.gms.google-services")
+}
 android {
     namespace = "com.example.duan1"
     compileSdk = 36
@@ -40,6 +41,16 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+    // --- CÁC DEPENDENCIES FIREBASE & RETROFIT (Đã có) ---
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("com.github.bumptech.glide:glide:4.16.0")
+
+    // Firebase Auth
+    implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    // ---------------------------------------------------
 }

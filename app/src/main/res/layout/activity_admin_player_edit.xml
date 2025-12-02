@@ -2,9 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark_background"
+    android:fitsSystemWindows="true"
     tools:context=".activities.AdminPlayerEditActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -61,13 +63,12 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_select_image"
+                    style="@style/Widget.Material3.Button.TextButton.Icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/input_background_color"
                     android:text="Chọn ảnh đại diện"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
-                    app:cornerRadius="8dp"
                     app:icon="@drawable/ic_add"
                     app:iconTint="@color/white" />
             </LinearLayout>
@@ -77,25 +78,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:boxBackgroundColor="@color/white"
-                app:boxStrokeColor="@android:color/white">
+                android:hint="Tên đầy đủ (Bắt buộc)"
+                android:textColorHint="@color/gray_text"
+                app:boxBackgroundColor="@color/input_background_color"
+                app:boxStrokeColor="@color/pitch_green">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_player_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Tên đầy đủ (Bắt buộc)"
                     android:inputType="textPersonName"
                     android:textColor="@color/white" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
+                style="@style/TextAppearance.Material3.LabelMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
                 android:layout_marginBottom="8dp"
-                android:text="Dữ liệu Tham chiếu (FK)"
-                android:textColor="@color/gray_text"
-                android:textSize="14sp" />
+                android:text="Đội bóng"
+                android:textColor="@color/gray_text" />
 
             <Spinner
                 android:id="@+id/spinner_team"
@@ -105,6 +108,15 @@
                 android:background="@drawable/rounded_spinner_background"
                 android:paddingStart="10dp" />
 
+            <TextView
+                style="@style/TextAppearance.Material3.LabelMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginBottom="8dp"
+                android:text="Vị trí"
+                android:textColor="@color/gray_text" />
+
             <Spinner
                 android:id="@+id/spinner_position"
                 android:layout_width="match_parent"
@@ -113,11 +125,20 @@
                 android:background="@drawable/rounded_spinner_background"
                 android:paddingStart="10dp" />
 
+            <TextView
+                style="@style/TextAppearance.Material3.LabelMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginBottom="8dp"
+                android:text="Quốc tịch"
+                android:textColor="@color/gray_text" />
+
             <Spinner
                 android:id="@+id/spinner_nationality"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginBottom="30dp"
+                android:layout_marginBottom="24dp"
                 android:background="@drawable/rounded_spinner_background"
                 android:paddingStart="10dp" />
 
@@ -125,8 +146,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:orientation="horizontal"
-                android:weightSum="2">
+                android:baselineAligned="false"
+                android:orientation="horizontal">
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -134,14 +155,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:layout_weight="1"
-                    app:boxBackgroundColor="@color/white"
-                    app:boxStrokeColor="@android:color/white">
+                    android:hint="Chiều cao (m)"
+                    android:textColorHint="@color/gray_text"
+                    app:boxBackgroundColor="@color/input_background_color"
+                    app:boxStrokeColor="@color/pitch_green">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_height"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Chiều cao (m)"
                         android:inputType="numberDecimal"
                         android:textColor="@color/white" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -152,14 +174,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
-                    app:boxBackgroundColor="@color/white"
-                    app:boxStrokeColor="@android:color/white">
+                    android:hint="Cân nặng (kg)"
+                    android:textColorHint="@color/gray_text"
+                    app:boxBackgroundColor="@color/input_background_color"
+                    app:boxStrokeColor="@color/pitch_green">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_weight"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Cân nặng (kg)"
                         android:inputType="numberDecimal"
                         android:textColor="@color/white" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -170,15 +193,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:boxBackgroundColor="@color/white"
-                app:boxStrokeColor="@android:color/white">
+                android:hint="Tiểu sử / Mô tả (Tùy chọn)"
+                android:textColorHint="@color/gray_text"
+                app:boxBackgroundColor="@color/input_background_color"
+                app:boxStrokeColor="@color/pitch_green">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="top"
-                    android:hint="Tiểu sử / Mô tả (Tùy chọn)"
                     android:inputType="textMultiLine"
                     android:lines="4"
                     android:textColor="@color/white" />
@@ -195,11 +219,11 @@
         android:elevation="8dp"
         android:orientation="horizontal"
         android:padding="16dp"
-        android:weightSum="3"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_delete_player"
+            style="@style/Widget.Material3.Button"
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:layout_marginEnd="8dp"
@@ -213,6 +237,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_save_player"
+            style="@style/Widget.Material3.Button"
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:layout_marginStart="8dp"

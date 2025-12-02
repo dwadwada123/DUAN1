@@ -33,13 +33,21 @@ public class AdminStatsFragment extends Fragment {
         View cardUsers = view.findViewById(R.id.stat_card_users);
         View cardSquads = view.findViewById(R.id.stat_card_squads);
 
-        setupStatCard(cardUsers, "Tổng Người dùng", "1,250", R.drawable.ic_users_active);
+        setupStatCard(cardUsers, "Tổng Người dùng", "1,250", R.drawable.ic_user);
         setupStatCard(cardSquads, "Tổng Đội hình", "3,400", R.drawable.ic_formation);
-
         btnLogout.setOnClickListener(v -> {
+            // Tạo Intent để chuyển đến LoginActivity
             Intent intent = new Intent(getActivity(), LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+            // Bắt đầu LoginActivity mới
             startActivity(intent);
+
+            // Đóng tất cả các Activity trong tác vụ hiện tại
+            // getActivity() có thể null nếu Fragment đã bị tách khỏi Activity,
+            // vì vậy cần kiểm tra null để tránh lỗi.
+            if (getActivity() != null) {
+                getActivity().finishAffinity();
+            }
         });
     }
 
