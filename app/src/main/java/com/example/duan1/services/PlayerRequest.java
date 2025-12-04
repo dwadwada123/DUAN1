@@ -1,16 +1,38 @@
 package com.example.duan1.services;
 
-public class PlayerRequest {
-    // Các trường dữ liệu cần thiết để tạo/sửa Player
-    private String name;
-    private String position;
-    private int age;
-    private String photoUrl; // Hoặc dùng Multipart cho file upload
+import com.google.gson.annotations.SerializedName;
 
-    // Constructor, Getters, Setters (hoặc chỉ Getters nếu dùng Gson)
-    public PlayerRequest(String name, String position, int age) {
+public class PlayerRequest {
+    private String name;
+
+    @SerializedName("team_name")
+    private String teamName;
+
+    private String position;
+    private String nationality;
+    private String height;
+    private String weight;
+    private String description;
+
+    @SerializedName("team_logo")
+    private String teamLogo;
+
+    @SerializedName("image_url")
+    private String imageUrl;
+
+    @SerializedName("jersey_number")
+    private int jerseyNumber;
+
+    public PlayerRequest(String name, String teamName, String position, String nationality, String height, String weight, String description, String imageUrl, int jerseyNumber) {
         this.name = name;
+        this.teamName = teamName;
         this.position = position;
-        this.age = age;
+        this.nationality = nationality;
+        this.height = height;
+        this.weight = weight;
+        this.description = description;
+        this.imageUrl = imageUrl;
+        this.jerseyNumber = jerseyNumber;
+        this.teamLogo = "";
     }
 }

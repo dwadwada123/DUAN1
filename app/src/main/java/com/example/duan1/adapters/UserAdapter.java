@@ -17,6 +17,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     private Context context;
     private List<User> userList;
     private OnUserActionListener listener;
+
     public interface OnUserActionListener {
         void onDeleteUser(User user);
     }
@@ -43,11 +44,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
         User user = userList.get(position);
         if (user == null) return;
+        String name = (user.getDisplayName() != null && !user.getDisplayName().isEmpty())
+                ? user.getDisplayName()
+                : "User " + user.getEmail().split("@")[0];
 
-        holder.tvName.setText(user.getDisplayName());
+        holder.tvName.setText(name);
         holder.tvEmail.setText(user.getEmail());
 
-        holder.btnDelete.setOnClickListener(v -> listener.onDeleteUser(user));
+        holder.btnDelete.setOnClickListener(v -> {
+            if (listener != null) listener.onDeleteUser(user);
+        });
     }
 
     @Override

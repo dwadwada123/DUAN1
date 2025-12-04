@@ -153,9 +153,8 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
                     android:layout_weight="1"
-                    android:hint="Chiều cao (m)"
+                    android:hint="Cao (m)"
                     android:textColorHint="@color/gray_text"
                     app:boxBackgroundColor="@color/input_background_color"
                     app:boxStrokeColor="@color/pitch_green">
@@ -174,7 +173,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
-                    android:hint="Cân nặng (kg)"
+                    android:hint="Nặng (kg)"
                     android:textColorHint="@color/gray_text"
                     app:boxBackgroundColor="@color/input_background_color"
                     app:boxStrokeColor="@color/pitch_green">
@@ -184,6 +183,25 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="numberDecimal"
+                        android:textColor="@color/white" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:hint="Số áo"
+                    android:textColorHint="@color/gray_text"
+                    app:boxBackgroundColor="@color/input_background_color"
+                    app:boxStrokeColor="@color/pitch_green">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_jersey_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
                         android:textColor="@color/white" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>

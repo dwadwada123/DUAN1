@@ -6,66 +6,63 @@ import java.io.Serializable;
 
 public class Player implements Serializable {
 
-    @SerializedName("idPlayer")
-    private String idPlayer;
+    @SerializedName("_id")
+    private String id;
 
-    @SerializedName("strPlayer")
+    @SerializedName("name")
     private String name;
 
-    @SerializedName("strTeam")
+    @SerializedName("team_name")
     private String team;
 
-    @SerializedName("strNationality")
-    private String nationality;
+    @SerializedName("team_logo")
+    private String teamLogo;
 
-    @SerializedName("strPosition")
+    @SerializedName("position")
     private String position;
 
-    @SerializedName("strThumb")
-    private String thumbUrl;
+    @SerializedName("nationality")
+    private String nationality;
 
-    @SerializedName("strCutout")
-    private String cutoutUrl;
+    @SerializedName("image_url")
+    private String imageUrl;
 
-    @SerializedName("strHeight")
+    @SerializedName("height")
     private String height;
 
-    @SerializedName("strWeight")
+    @SerializedName("weight")
     private String weight;
 
-    @SerializedName("strDescriptionEN")
+    @SerializedName("description")
     private String description;
+
+    @SerializedName("jersey_number")
+    private int jerseyNumber;
+
+    @SerializedName("is_active")
+    private boolean isActive;
 
     public Player() {
     }
 
-    public String getImage() {
-        if (cutoutUrl != null && !cutoutUrl.isEmpty()) return cutoutUrl;
-        return thumbUrl;
-    }
-
-    public String getIdPlayer() {
-        return idPlayer;
-    }
-
-    public void setIdPlayer(String idPlayer) {
-        this.idPlayer = idPlayer;
+    public String getId() {
+        return id;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getTeam() {
         return team;
     }
 
-    public void setTeam(String team) {
-        this.team = team;
+    public String getPosition() {
+        return position;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getNationality() {
@@ -76,51 +73,63 @@ public class Player implements Serializable {
         this.nationality = nationality;
     }
 
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
-    public String getThumbUrl() {
-        return thumbUrl;
-    }
-
-    public void setThumbUrl(String thumbUrl) {
-        this.thumbUrl = thumbUrl;
-    }
-
-    public String getCutoutUrl() {
-        return cutoutUrl;
-    }
-
-    public void setCutoutUrl(String cutoutUrl) {
-        this.cutoutUrl = cutoutUrl;
+    public String getImage() {
+        return imageUrl != null ? imageUrl : "";
     }
 
     public String getHeight() {
         return height;
     }
 
-    public void setHeight(String height) {
-        this.height = height;
-    }
-
     public String getWeight() {
         return weight;
-    }
-
-    public void setWeight(String weight) {
-        this.weight = weight;
     }
 
     public String getDescription() {
         return description;
     }
 
+    public String getTeamLogo() {
+        return teamLogo;
+    }
+
+    public int getJerseyNumber() {
+        return jerseyNumber;
+    }
+
+    public void setJerseyNumber(int jerseyNumber) {
+        this.jerseyNumber = jerseyNumber;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setTeam(String team) {
+        this.team = team;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void setHeight(String height) {
+        this.height = height;
+    }
+
+    public void setWeight(String weight) {
+        this.weight = weight;
+    }
+
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setThumbUrl(String thumbUrl) {
+        this.imageUrl = thumbUrl;
     }
 }

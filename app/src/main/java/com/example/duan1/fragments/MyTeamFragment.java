@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,18 +20,31 @@ import com.example.duan1.activities.TacticsBoardActivity;
 import com.example.duan1.adapters.SquadAdapter;
 import com.example.duan1.dialogs.CreateSquadDialog;
 import com.example.duan1.models.Squad;
+import com.example.duan1.services.ApiClient;
+import com.example.duan1.services.ApiService;
+import com.example.duan1.services.SquadRequest;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MyTeamFragment extends Fragment {
 
     private RecyclerView rvSquads;
     private LinearLayout layoutEmpty;
     private FloatingActionButton fabCreate;
+    private ProgressBar pbLoading;
+
     private SquadAdapter adapter;
-    private final List<Squad> dummySquads = new ArrayList<>();
+    private List<Squad> squadList = new ArrayList<>();
+    private ApiService apiService;
+    private FirebaseAuth mAuth;
 
     @Nullable
     @Override
@@ -42,46 +56,114 @@ public class MyTeamFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mAuth = FirebaseAuth.getInstance();
+        apiService = ApiClient.getApiService();
+
         rvSquads = view.findViewById(R.id.rv_squads);
         layoutEmpty = view.findViewById(R.id.layout_empty_state);
         fabCreate = view.findViewById(R.id.fab_create_squad);
+        pbLoading = view.findViewById(R.id.pb_loading);
 
-        rvSquads.setLayoutManager(new LinearLayoutManager(getContext()));
+        setupRecyclerView();
 
-        adapter = new SquadAdapter(getContext(), dummySquads, squad -> {
-            Intent intent = new Intent(getContext(), TacticsBoardActivity.class);
-            intent.putExtra("squad_id", squad.getSquadId());
-            startActivity(intent);
-        });
+        fabCreate.setOnClickListener(v -> showCreateDialog());
 
-        rvSquads.setAdapter(adapter);
-
-        fabCreate.setOnClickListener(v -> {
-            CreateSquadDialog.show(getContext(), (name, formation) -> {
-                Squad newSquad = new Squad("id_" + System.currentTimeMillis(), "user1", name, formation);
-                dummySquads.add(newSquad);
-                updateUI();
-                Toast.makeText(getContext(), "Đã tạo đội: " + name, Toast.LENGTH_SHORT).show();
-            });
-        });
-
-        loadDummyData();
+        loadSquads();
     }
 
-    private void loadDummyData() {
-        dummySquads.add(new Squad("sq1", "user1", "Dream Team 2025", "4-3-3"));
-        dummySquads.add(new Squad("sq2", "user1", "MU All Stars", "4-4-2"));
-        updateUI();
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadSquads();
+    }
+
+    private void setupRecyclerView() {
+        rvSquads.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new SquadAdapter(getContext(), squadList, squad -> {
+            Intent intent = new Intent(getContext(), TacticsBoardActivity.class);
+            intent.putExtra("squad_id", squad.getId());
+            startActivity(intent);
+        });
+        rvSquads.setAdapter(adapter);
+    }
+
+    private void loadSquads() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null) return;
+
+        pbLoading.setVisibility(View.VISIBLE);
+
+        user.getIdToken(false).addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                String token = task.getResult().getToken();
+
+                apiService.getUserSquads("Bearer " + token).enqueue(new Callback<List<Squad>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<Squad>> call, @NonNull Response<List<Squad>> response) {
+                        pbLoading.setVisibility(View.GONE);
+                        if (response.isSuccessful() && response.body() != null) {
+                            squadList = response.body();
+                            updateUI();
+                        } else {
+                            Toast.makeText(getContext(), "Lỗi tải đội hình", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<List<Squad>> call, @NonNull Throwable t) {
+                        pbLoading.setVisibility(View.GONE);
+                        Toast.makeText(getContext(), "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+    }
+
+    private void showCreateDialog() {
+        CreateSquadDialog.show(getContext(), (name, formation) -> createNewSquad(name, formation));
+    }
+
+    private void createNewSquad(String name, String formation) {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null) return;
+
+        pbLoading.setVisibility(View.VISIBLE);
+
+        user.getIdToken(false).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                String token = task.getResult().getToken();
+                SquadRequest request = new SquadRequest(name, formation);
+
+                apiService.createSquad("Bearer " + token, request).enqueue(new Callback<Squad>() {
+                    @Override
+                    public void onResponse(@NonNull Call<Squad> call, @NonNull Response<Squad> response) {
+                        pbLoading.setVisibility(View.GONE);
+                        if (response.isSuccessful()) {
+                            Toast.makeText(getContext(), "Tạo đội hình thành công", Toast.LENGTH_SHORT).show();
+                            loadSquads();
+                        } else {
+                            Toast.makeText(getContext(), "Tạo thất bại: " + response.code(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<Squad> call, @NonNull Throwable t) {
+                        pbLoading.setVisibility(View.GONE);
+                        Toast.makeText(getContext(), "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
     }
 
     private void updateUI() {
-        if (dummySquads.isEmpty()) {
+        if (squadList.isEmpty()) {
             layoutEmpty.setVisibility(View.VISIBLE);
             rvSquads.setVisibility(View.GONE);
         } else {
             layoutEmpty.setVisibility(View.GONE);
             rvSquads.setVisibility(View.VISIBLE);
-            adapter.setData(dummySquads);
+            adapter.setData(squadList);
         }
     }
 }

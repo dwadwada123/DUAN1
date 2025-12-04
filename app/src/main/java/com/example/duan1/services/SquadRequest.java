@@ -1,16 +1,15 @@
 package com.example.duan1.services;
 
-import java.util.List;
+import com.google.gson.annotations.SerializedName;
 
-// Dùng cho POST /api/squads (Tạo đội hình mới)
 public class SquadRequest {
-    private String name;
-    private String formation;
-    private List<String> initialPlayerIds; // Ví dụ: ID cầu thủ ban đầu
+    @SerializedName("squad_name")
+    private String squadName;
 
-    public SquadRequest(String name, String formation, List<String> initialPlayerIds) {
-        this.name = name;
+    private String formation;
+
+    public SquadRequest(String squadName, String formation) {
+        this.squadName = squadName;
         this.formation = formation;
-        this.initialPlayerIds = initialPlayerIds;
     }
 }

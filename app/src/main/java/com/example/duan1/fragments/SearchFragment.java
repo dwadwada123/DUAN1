@@ -2,15 +2,19 @@ package com.example.duan1.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -22,8 +26,16 @@ import com.example.duan1.R;
 import com.example.duan1.activities.PlayerDetailActivity;
 import com.example.duan1.adapters.PlayerAdapter;
 import com.example.duan1.models.Player;
-import java.util.ArrayList;
+import com.example.duan1.services.ApiClient;
+import com.example.duan1.services.ApiService;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SearchFragment extends Fragment {
 
@@ -32,8 +44,12 @@ public class SearchFragment extends Fragment {
     private RecyclerView rvSearchResults;
     private ProgressBar pbLoading;
     private LinearLayout layoutEmptyState;
+    private TextView tvEmptyMessage;
+
     private boolean isSearchByPlayer = true;
     private PlayerAdapter adapter;
+    private ApiService apiService;
+    private FirebaseAuth mAuth;
 
     @Nullable
     @Override
@@ -45,6 +61,16 @@ public class SearchFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mAuth = FirebaseAuth.getInstance();
+        apiService = ApiClient.getApiService();
+
+        initViews(view);
+        setupRecyclerView();
+        setupListeners();
+        updateFilterUI();
+    }
+
+    private void initViews(View view) {
         etSearch = view.findViewById(R.id.et_search);
         btnFilterPlayer = view.findViewById(R.id.btn_filter_player);
         btnFilterTeam = view.findViewById(R.id.btn_filter_team);
@@ -52,14 +78,16 @@ public class SearchFragment extends Fragment {
         rvSearchResults = view.findViewById(R.id.rv_search_results);
         pbLoading = view.findViewById(R.id.pb_loading);
         layoutEmptyState = view.findViewById(R.id.layout_empty_state);
+        tvEmptyMessage = view.findViewById(R.id.tv_empty_message);
+    }
 
+    private void setupRecyclerView() {
         rvSearchResults.setLayoutManager(new LinearLayoutManager(getContext()));
-
         adapter = new PlayerAdapter(getContext(), this::onPlayerClick);
         rvSearchResults.setAdapter(adapter);
+    }
 
-        updateFilterUI();
-
+    private void setupListeners() {
         btnFilterPlayer.setOnClickListener(v -> {
             isSearchByPlayer = true;
             updateFilterUI();
@@ -70,12 +98,69 @@ public class SearchFragment extends Fragment {
             updateFilterUI();
         });
 
-        btnSearch.setOnClickListener(v -> {
-            String query = etSearch.getText().toString().trim();
-            if (query.isEmpty()) {
-                Toast.makeText(getContext(), "Vui lòng nhập từ khóa", Toast.LENGTH_SHORT).show();
+        btnSearch.setOnClickListener(v -> handleSearch());
+
+        etSearch.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                handleSearch();
+                return true;
+            }
+            return false;
+        });
+    }
+
+    private void handleSearch() {
+        String query = etSearch.getText().toString().trim();
+        if (TextUtils.isEmpty(query)) {
+            Toast.makeText(getContext(), "Vui lòng nhập từ khóa", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        performSearch(query);
+    }
+
+    private void performSearch(String query) {
+        showLoading(true);
+
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null) {
+            showLoading(false);
+            Toast.makeText(getContext(), "Phiên đăng nhập hết hạn", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        user.getIdToken(false).addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                String token = task.getResult().getToken();
+                callSearchApi(token, query);
             } else {
-                performSearchDummy(query);
+                showLoading(false);
+                Toast.makeText(getContext(), "Lỗi xác thực Firebase", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void callSearchApi(String token, String query) {
+        apiService.getPlayers("Bearer " + token, query).enqueue(new Callback<List<Player>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Player>> call, @NonNull Response<List<Player>> response) {
+                showLoading(false);
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Player> players = response.body();
+                    if (players.isEmpty()) {
+                        showEmptyState("Không tìm thấy kết quả nào cho: " + query);
+                    } else {
+                        showResults(players);
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Lỗi server: " + response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Player>> call, @NonNull Throwable t) {
+                showLoading(false);
+                Log.e("SEARCH_ERROR", "Error: " + t.getMessage());
+                Toast.makeText(getContext(), "Lỗi kết nối", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -100,59 +185,26 @@ public class SearchFragment extends Fragment {
         }
     }
 
-    private void performSearchDummy(String query) {
-        layoutEmptyState.setVisibility(View.GONE);
-        rvSearchResults.setVisibility(View.GONE);
-        pbLoading.setVisibility(View.VISIBLE);
-
-        new Handler().postDelayed(() -> {
-            List<Player> dummyList = new ArrayList<>();
-
-            // Messi
-            Player messi = new Player();
-            messi.setIdPlayer("34145903");
-            messi.setName("Lionel Messi");
-            messi.setTeam("Inter Miami CF");
-            messi.setNationality("Argentina");
-            messi.setPosition("Forward");
-            messi.setThumbUrl("https://www.thesportsdb.com/images/media/player/thumb/rscppl1516206339.jpg");
-            messi.setCutoutUrl("https://www.thesportsdb.com/images/media/player/cutout/60515729.png");
-            messi.setHeight("1.70 m");
-            messi.setWeight("72 kg");
-            messi.setDescription("Lionel Andrés Messi is an Argentine professional footballer who plays as a forward...");
-            dummyList.add(messi);
-
-            // Ronaldo
-            Player ronaldo = new Player();
-            ronaldo.setIdPlayer("34145904");
-            ronaldo.setName("Cristiano Ronaldo");
-            ronaldo.setTeam("Al Nassr");
-            ronaldo.setNationality("Portugal");
-            ronaldo.setPosition("Forward");
-            ronaldo.setThumbUrl("https://www.thesportsdb.com/images/media/player/thumb/h031l41593338320.jpg");
-            ronaldo.setCutoutUrl("https://www.thesportsdb.com/images/media/player/cutout/1593338320.png");
-            ronaldo.setHeight("1.87 m");
-            ronaldo.setWeight("83 kg");
-            ronaldo.setDescription("Cristiano Ronaldo dos Santos Aveiro is a Portuguese professional footballer...");
-            dummyList.add(ronaldo);
-
-            // Mbappe
-            Player mbappe = new Player();
-            mbappe.setIdPlayer("34145905");
-            mbappe.setName("Kylian Mbappé");
-            mbappe.setTeam("Real Madrid");
-            mbappe.setNationality("France");
-            mbappe.setPosition("Forward");
-            mbappe.setThumbUrl("https://www.thesportsdb.com/images/media/player/thumb/20180627160309.jpg"); // Ảnh ví dụ
-            mbappe.setHeight("1.78 m");
-            mbappe.setWeight("73 kg");
-            dummyList.add(mbappe);
-
+    private void showLoading(boolean isLoading) {
+        if (isLoading) {
+            pbLoading.setVisibility(View.VISIBLE);
+            rvSearchResults.setVisibility(View.GONE);
+            layoutEmptyState.setVisibility(View.GONE);
+        } else {
             pbLoading.setVisibility(View.GONE);
-            rvSearchResults.setVisibility(View.VISIBLE);
-            adapter.setData(dummyList);
+        }
+    }
 
-        }, 1500);
+    private void showEmptyState(String message) {
+        rvSearchResults.setVisibility(View.GONE);
+        layoutEmptyState.setVisibility(View.VISIBLE);
+        tvEmptyMessage.setText(message);
+    }
+
+    private void showResults(List<Player> players) {
+        layoutEmptyState.setVisibility(View.GONE);
+        rvSearchResults.setVisibility(View.VISIBLE);
+        adapter.setData(players);
     }
 
     private void onPlayerClick(Player player) {

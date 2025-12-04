@@ -1,10 +1,25 @@
 package com.example.duan1.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class User {
+    @SerializedName("firebase_uid")
     private String userId;
+
+    @SerializedName("email")
     private String email;
+
+    @SerializedName("display_name")
     private String displayName;
-    private String role; // "user" hoặc "admin"
+
+    @SerializedName("role")
+    private String role;
+
+    @SerializedName("squad_count")
+    private int squadCount;
+
+    @SerializedName("player_count")
+    private int playerCount;
 
     public User() {
     }
@@ -20,31 +35,23 @@ public class User {
         return userId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
     public String getEmail() {
         return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getDisplayName() {
         return displayName;
     }
 
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
     public String getRole() {
         return role;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public int getSquadCount() {
+        return squadCount;
+    }
+
+    public int getPlayerCount() {
+        return playerCount;
     }
 }

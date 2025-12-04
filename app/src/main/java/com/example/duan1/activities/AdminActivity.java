@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.duan1.R;
+import com.example.duan1.fragments.AdminPlayersFragment;
 import com.example.duan1.fragments.AdminStatsFragment;
 import com.example.duan1.fragments.AdminUsersFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -30,6 +31,8 @@ public class AdminActivity extends AppCompatActivity {
                 selectedFragment = new AdminStatsFragment();
             } else if (itemId == R.id.nav_admin_users) {
                 selectedFragment = new AdminUsersFragment();
+            } else if (itemId == R.id.nav_admin_players) {
+                selectedFragment = new AdminPlayersFragment();
             }
 
             if (selectedFragment != null) {

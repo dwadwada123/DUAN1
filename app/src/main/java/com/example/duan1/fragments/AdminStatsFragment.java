@@ -6,8 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,8 +15,23 @@ import androidx.fragment.app.Fragment;
 
 import com.example.duan1.R;
 import com.example.duan1.activities.LoginActivity;
+import com.example.duan1.services.ApiClient;
+import com.example.duan1.services.ApiService;
+import com.example.duan1.services.StatsResponse;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AdminStatsFragment extends Fragment {
+
+    private TextView tvUsersCount, tvSquadsCount;
+    private Button btnLogout;
+
+    private ApiService apiService;
+    private FirebaseAuth mAuth;
 
     @Nullable
     @Override
@@ -28,40 +43,61 @@ public class AdminStatsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Button btnLogout = view.findViewById(R.id.btn_admin_logout);
+        mAuth = FirebaseAuth.getInstance();
+        apiService = ApiClient.getApiService();
 
+        btnLogout = view.findViewById(R.id.btn_admin_logout);
         View cardUsers = view.findViewById(R.id.stat_card_users);
         View cardSquads = view.findViewById(R.id.stat_card_squads);
 
-        setupStatCard(cardUsers, "Tổng Người dùng", "1,250", R.drawable.ic_user);
-        setupStatCard(cardSquads, "Tổng Đội hình", "3,400", R.drawable.ic_formation);
+        if (cardUsers != null) {
+            ((TextView) cardUsers.findViewById(R.id.tv_stat_label)).setText("Tổng User");
+            tvUsersCount = cardUsers.findViewById(R.id.tv_stat_value);
+            tvUsersCount.setText("-");
+        }
+
+        if (cardSquads != null) {
+            ((TextView) cardSquads.findViewById(R.id.tv_stat_label)).setText("Tổng Squad");
+            tvSquadsCount = cardSquads.findViewById(R.id.tv_stat_value);
+            tvSquadsCount.setText("-");
+        }
+
         btnLogout.setOnClickListener(v -> {
-            // Tạo Intent để chuyển đến LoginActivity
+            mAuth.signOut();
             Intent intent = new Intent(getActivity(), LoginActivity.class);
-
-            // Bắt đầu LoginActivity mới
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
-
-            // Đóng tất cả các Activity trong tác vụ hiện tại
-            // getActivity() có thể null nếu Fragment đã bị tách khỏi Activity,
-            // vì vậy cần kiểm tra null để tránh lỗi.
-            if (getActivity() != null) {
-                getActivity().finishAffinity();
-            }
         });
+
+        loadStats();
     }
 
-    private void setupStatCard(View cardView, String label, String value, int iconResId) {
-        if (cardView != null) {
-            TextView tvLabel = cardView.findViewById(R.id.tv_stat_label);
-            TextView tvValue = cardView.findViewById(R.id.tv_stat_value);
-            ImageView ivIcon = cardView.findViewById(R.id.iv_stat_icon);
+    private void loadStats() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null) return;
 
-            if (tvLabel != null) tvLabel.setText(label);
-            if (tvValue != null) tvValue.setText(value);
-            if (ivIcon != null && iconResId != 0) {
-                ivIcon.setImageResource(iconResId);
+        user.getIdToken(false).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                String token = task.getResult().getToken();
+                apiService.getStats("Bearer " + token).enqueue(new Callback<StatsResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<StatsResponse> call, @NonNull Response<StatsResponse> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            StatsResponse stats = response.body();
+                            if (tvUsersCount != null)
+                                tvUsersCount.setText(String.valueOf(stats.getUserCount()));
+                            if (tvSquadsCount != null)
+                                tvSquadsCount.setText(String.valueOf(stats.getSquadCount()));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<StatsResponse> call, @NonNull Throwable t) {
+                        if (getContext() != null)
+                            Toast.makeText(getContext(), "Lỗi tải thống kê", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
-        }
+        });
     }
 }

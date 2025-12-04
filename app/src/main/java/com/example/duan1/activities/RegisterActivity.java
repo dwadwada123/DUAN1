@@ -1,6 +1,7 @@
 package com.example.duan1.activities;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,8 +22,6 @@ public class RegisterActivity extends AppCompatActivity {
     private TextInputEditText etEmail, etPassword, etConfirmPassword;
     private Button btnRegister;
     private TextView tvLoginLink;
-
-    // Khai báo Firebase Authentication
     private FirebaseAuth mAuth;
 
     @Override
@@ -30,70 +29,87 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        // Khởi tạo Firebase Auth instance
         mAuth = FirebaseAuth.getInstance();
 
+        initViews();
+        setupListeners();
+    }
+
+    private void initViews() {
         etEmail = findViewById(R.id.et_email);
         etPassword = findViewById(R.id.et_password);
         etConfirmPassword = findViewById(R.id.et_confirm_password);
         btnRegister = findViewById(R.id.btn_register);
         tvLoginLink = findViewById(R.id.tv_login_link);
+    }
 
+    private void setupListeners() {
         btnRegister.setOnClickListener(v -> handleRegistration());
 
-        tvLoginLink.setOnClickListener(v -> {
-            finish();
-        });
+        tvLoginLink.setOnClickListener(v -> finish());
     }
 
     private void handleRegistration() {
-        String email = etEmail.getText().toString().trim();
-        String password = etPassword.getText().toString().trim();
-        String confirmPassword = etConfirmPassword.getText().toString().trim();
+        String email = String.valueOf(etEmail.getText()).trim();
+        String password = String.valueOf(etPassword.getText()).trim();
+        String confirmPassword = String.valueOf(etConfirmPassword.getText()).trim();
 
-        if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-            Toast.makeText(this, "Vui lòng điền đầy đủ thông tin.", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(email)) {
+            etEmail.setError("Vui lòng nhập Email");
+            return;
+        }
+
+        if (TextUtils.isEmpty(password)) {
+            etPassword.setError("Vui lòng nhập Mật khẩu");
+            return;
+        }
+
+        if (password.length() < 6) {
+            etPassword.setError("Mật khẩu phải có ít nhất 6 ký tự");
             return;
         }
 
         if (!password.equals(confirmPassword)) {
-            Toast.makeText(this, "Mật khẩu xác nhận không khớp.", Toast.LENGTH_SHORT).show();
+            etConfirmPassword.setError("Mật khẩu xác nhận không khớp");
             return;
         }
 
-        // Firebase yêu cầu mật khẩu tối thiểu 6 ký tự
-        if (password.length() < 6) {
-            Toast.makeText(this, "Mật khẩu phải có ít nhất 6 ký tự.", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        setLoading(true);
 
-        // 1. Thực hiện đăng ký User với Firebase
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        setLoading(false);
                         if (task.isSuccessful()) {
-                            // Đăng ký Firebase thành công
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(RegisterActivity.this, "Đăng ký thành công! Vui lòng đăng nhập.", Toast.LENGTH_LONG).show();
-
-                            // Tùy chọn: Gửi email xác minh ngay sau khi đăng ký (nên dùng)
                             if (user != null) {
-                                user.sendEmailVerification()
-                                        .addOnCompleteListener(verificationTask -> {
-                                            if (verificationTask.isSuccessful()) {
-                                                // Thông báo nếu gửi email xác minh thành công
-                                            }
-                                        });
+                                user.sendEmailVerification();
                             }
-
-                            finish(); // Quay lại màn hình Login
+                            mAuth.signOut();
+                            Toast.makeText(RegisterActivity.this, "Đăng ký thành công! Vui lòng đăng nhập.", Toast.LENGTH_LONG).show();
+                            finish();
                         } else {
-                            // Đăng ký thất bại (ví dụ: email đã tồn tại, format email sai,...)
-                            String errorMessage = task.getException() != null ? task.getException().getMessage() : "Lỗi đăng ký không xác định.";
-                            Toast.makeText(RegisterActivity.this, "Đăng ký thất bại: " + errorMessage, Toast.LENGTH_LONG).show();
+                            String error = task.getException() != null ? task.getException().getMessage() : "Đăng ký thất bại";
+                            Toast.makeText(RegisterActivity.this, error, Toast.LENGTH_LONG).show();
                         }
                     }
                 });
+    }
+
+    private void setLoading(boolean isLoading) {
+        if (isLoading) {
+            btnRegister.setEnabled(false);
+            btnRegister.setText("Đang xử lý...");
+            etEmail.setEnabled(false);
+            etPassword.setEnabled(false);
+            etConfirmPassword.setEnabled(false);
+        } else {
+            btnRegister.setEnabled(true);
+            btnRegister.setText("Đăng ký");
+            etEmail.setEnabled(true);
+            etPassword.setEnabled(true);
+            etConfirmPassword.setEnabled(true);
+        }
     }
 }

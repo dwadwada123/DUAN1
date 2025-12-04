@@ -43,13 +43,10 @@ public class SquadAdapter extends RecyclerView.Adapter<SquadAdapter.SquadViewHol
     public void onBindViewHolder(@NonNull SquadViewHolder holder, int position) {
         Squad squad = squadList.get(position);
         if (squad == null) return;
-
         holder.tvName.setText(squad.getSquadName());
         holder.tvFormation.setText(squad.getFormation());
-
-        int count = squad.getPositions() != null ? squad.getPositions().size() : 0;
+        int count = squad.getItems() != null ? squad.getItems().size() : 0;
         holder.tvInfo.setText(count + "/11 cầu thủ đã xếp");
-
         holder.itemView.setOnClickListener(v -> listener.onSquadClick(squad));
     }
 

@@ -1,66 +1,130 @@
 package com.example.duan1.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.duan1.R;
+import com.example.duan1.activities.AdminPlayerEditActivity;
+import com.example.duan1.adapters.PlayerAdapter;
+import com.example.duan1.models.Player;
+import com.example.duan1.services.ApiClient;
+import com.example.duan1.services.ApiService;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AdminPlayersFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class AdminPlayersFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private EditText etSearch;
+    private RecyclerView rvPlayers;
+    private FloatingActionButton fabAdd;
+    private PlayerAdapter adapter;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private ApiService apiService;
+    private FirebaseAuth mAuth;
 
-    public AdminPlayersFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AdminPlayersFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static AdminPlayersFragment newInstance(String param1, String param2) {
-        AdminPlayersFragment fragment = new AdminPlayersFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_admin_players, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        mAuth = FirebaseAuth.getInstance();
+        apiService = ApiClient.getApiService();
+
+        etSearch = view.findViewById(R.id.et_admin_player_search);
+        rvPlayers = view.findViewById(R.id.rv_admin_players);
+        fabAdd = view.findViewById(R.id.fab_add_new_player);
+
+        setupRecyclerView();
+        setupListeners();
+
+        loadPlayers("");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadPlayers(etSearch.getText().toString());
+    }
+
+    private void setupRecyclerView() {
+        rvPlayers.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new PlayerAdapter(getContext(), player -> {
+            Intent intent = new Intent(getContext(), AdminPlayerEditActivity.class);
+            intent.putExtra("player_id", player.getId());
+            intent.putExtra("player_data", player);
+            startActivity(intent);
+        });
+
+        rvPlayers.setAdapter(adapter);
+    }
+
+    private void setupListeners() {
+        fabAdd.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), AdminPlayerEditActivity.class);
+            startActivity(intent);
+        });
+
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                loadPlayers(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+    }
+
+    private void loadPlayers(String query) {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null) return;
+
+        user.getIdToken(false).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                String token = task.getResult().getToken();
+                apiService.getPlayers("Bearer " + token, query).enqueue(new Callback<List<Player>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<Player>> call, @NonNull Response<List<Player>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            adapter.setData(response.body());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<List<Player>> call, @NonNull Throwable t) {
+                        if(getContext() != null)
+                            Toast.makeText(getContext(), "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
     }
 }
