@@ -2,7 +2,6 @@ package com.example.duan1.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,6 +67,8 @@ public class SearchFragment extends Fragment {
         setupRecyclerView();
         setupListeners();
         updateFilterUI();
+
+        performSearch("");
     }
 
     private void initViews(View view) {
@@ -111,10 +112,6 @@ public class SearchFragment extends Fragment {
 
     private void handleSearch() {
         String query = etSearch.getText().toString().trim();
-        if (TextUtils.isEmpty(query)) {
-            Toast.makeText(getContext(), "Vui lòng nhập từ khóa", Toast.LENGTH_SHORT).show();
-            return;
-        }
         performSearch(query);
     }
 
@@ -124,7 +121,6 @@ public class SearchFragment extends Fragment {
         FirebaseUser user = mAuth.getCurrentUser();
         if (user == null) {
             showLoading(false);
-            Toast.makeText(getContext(), "Phiên đăng nhập hết hạn", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -147,7 +143,7 @@ public class SearchFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Player> players = response.body();
                     if (players.isEmpty()) {
-                        showEmptyState("Không tìm thấy kết quả nào cho: " + query);
+                        showEmptyState("Không tìm thấy kết quả nào.");
                     } else {
                         showResults(players);
                     }
@@ -160,7 +156,9 @@ public class SearchFragment extends Fragment {
             public void onFailure(@NonNull Call<List<Player>> call, @NonNull Throwable t) {
                 showLoading(false);
                 Log.e("SEARCH_ERROR", "Error: " + t.getMessage());
-                Toast.makeText(getContext(), "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                if (getContext() != null) {
+                    Toast.makeText(getContext(), "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

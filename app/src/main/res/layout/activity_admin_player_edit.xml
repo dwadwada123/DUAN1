@@ -100,47 +100,59 @@
                 android:text="Đội bóng"
                 android:textColor="@color/gray_text" />
 
-            <Spinner
-                android:id="@+id/spinner_team"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/rounded_spinner_background"
-                android:paddingStart="10dp" />
-
-            <TextView
-                style="@style/TextAppearance.Material3.LabelMedium"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginBottom="8dp"
-                android:text="Vị trí"
-                android:textColor="@color/gray_text" />
+                android:layout_marginBottom="16dp"
+                android:hint="Đội bóng"
+                android:textColorHint="@color/gray_text"
+                app:boxBackgroundColor="@color/input_background_color"
+                app:boxStrokeColor="@color/pitch_green">
 
-            <Spinner
-                android:id="@+id/spinner_position"
+                <AutoCompleteTextView
+                    android:id="@+id/act_team"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:textColor="@color/white" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/rounded_spinner_background"
-                android:paddingStart="10dp" />
-
-            <TextView
-                style="@style/TextAppearance.Material3.LabelMedium"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginBottom="8dp"
-                android:text="Quốc tịch"
-                android:textColor="@color/gray_text" />
+                android:layout_marginBottom="16dp"
+                android:hint="Vị trí"
+                android:textColorHint="@color/gray_text"
+                app:boxBackgroundColor="@color/input_background_color"
+                app:boxStrokeColor="@color/pitch_green">
 
-            <Spinner
-                android:id="@+id/spinner_nationality"
+                <AutoCompleteTextView
+                    android:id="@+id/act_position"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:textColor="@color/white" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginBottom="24dp"
-                android:background="@drawable/rounded_spinner_background"
-                android:paddingStart="10dp" />
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:hint="Quốc tịch"
+                android:textColorHint="@color/gray_text"
+                app:boxBackgroundColor="@color/input_background_color"
+                app:boxStrokeColor="@color/pitch_green">
+
+                <AutoCompleteTextView
+                    android:id="@+id/act_nationality"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:textColor="@color/white" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

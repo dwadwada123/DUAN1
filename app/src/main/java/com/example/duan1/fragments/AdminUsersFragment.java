@@ -1,10 +1,14 @@
 package com.example.duan1.fragments;
 
-import android.app.AlertDialog;
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -57,7 +61,7 @@ public class AdminUsersFragment extends Fragment {
         rvUsers = view.findViewById(R.id.rv_user_list);
         rvUsers.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        adapter = new UserAdapter(getContext(), new ArrayList<>(), this::showDeleteConfirmDialog);
+        adapter = new UserAdapter(getContext(), new ArrayList<>(), this::showDeleteReasonDialog);
         rvUsers.setAdapter(adapter);
 
         loadUsers();
@@ -93,22 +97,43 @@ public class AdminUsersFragment extends Fragment {
         });
     }
 
-    private void showDeleteConfirmDialog(User user) {
-        new AlertDialog.Builder(getContext())
-                .setTitle("Xóa tài khoản")
-                .setMessage("Bạn có chắc chắn muốn xóa user: " + user.getEmail() + "?\nHành động này sẽ xóa cả đội hình của họ.")
-                .setPositiveButton("Xóa vĩnh viễn", (dialog, which) -> deleteUser(user))
-                .setNegativeButton("Hủy", null)
-                .show();
+    private void showDeleteReasonDialog(User user) {
+        Dialog dialog = new Dialog(getContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_delete_reason, null);
+        dialog.setContentView(view);
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.getWindow().setLayout(android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+
+        EditText etReason = view.findViewById(R.id.et_deletion_reason);
+        Button btnCancel = view.findViewById(R.id.btn_cancel_deletion);
+        Button btnConfirm = view.findViewById(R.id.btn_confirm_deletion);
+
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+        btnConfirm.setOnClickListener(v -> {
+            String reason = etReason.getText().toString().trim();
+            if (reason.isEmpty()) {
+                etReason.setError("Vui lòng nhập lý do");
+                return;
+            }
+            deleteUser(user, reason);
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
 
-    private void deleteUser(User user) {
+    private void deleteUser(User user, String reason) {
         FirebaseUser admin = mAuth.getCurrentUser();
         if (admin == null) return;
 
         admin.getIdToken(false).addOnCompleteListener(task -> {
             String token = task.getResult().getToken();
-            DeleteUserRequest request = new DeleteUserRequest("Deleted by Admin");
+            DeleteUserRequest request = new DeleteUserRequest(reason);
 
             apiService.deleteUser("Bearer " + token, user.getUserId(), request).enqueue(new Callback<Void>() {
                 @Override
